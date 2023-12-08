@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace functionTask1
+{
+    internal class Program
+    {
+
+        static void Main(string[] args)
+        {
+            const string FirstCommand = "1";
+            const string SecondCommand = "2";
+            const string ThirdCommand = "3";
+            const string ForthCommand = "4";
+            const string FifthCommand = "5";
+
+            bool isWorking = true;
+            string[] fullnameList = { "Баринов Виктор Петрович", "Лавров Максим Леонидович", "Гончарова Виктория Сергеевна",
+                "Анисимов Константин Тимофеевич", "Анисимова Анастасия Степановна", "Семёнова Екатерина Викторовна" };
+            string[] jobTitleList = { "Шеф-повар", "Повар", "Директор ресторана", "Бармен", "Официантка", "Повар" };
+            Console.WriteLine("Приветствуем вас!");
+
+            while (isWorking)
+            {
+                Console.WriteLine("Вы можете выполнить следующие команды, введя соответствующее число:" +
+                    "\n\n1 - добавить досье\n2 - вывести все досье\n3 - удалить досье\n4 - поиск по фамилии\n5 - выход");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case FirstCommand:
+                        Console.WriteLine("Введите Ф.И.О нового работника:");
+                        string tempFullname = Console.ReadLine();
+                        Console.WriteLine("Введите должность нового работника:");
+                        string tempJobTitle = Console.ReadLine();
+                        AddDossier(ref tempFullname, ref tempJobTitle, ref fullnameList, ref jobTitleList);
+                        break;
+
+                    case SecondCommand:
+                        break;
+
+                    case ThirdCommand:
+                        break;
+
+                    case ForthCommand:
+                        break;
+
+                    case FifthCommand:
+                        break;
+
+                    default:
+                        break;
+
+                }
+            }
+        }
+
+        static void AddDossier(ref string fullname, ref string jobTitle, ref string[] fullnameList, ref string[] jobTitleList)
+        {
+            string[] tempFullnameList = new string[fullnameList.Length +1];
+        }
+    }
+}

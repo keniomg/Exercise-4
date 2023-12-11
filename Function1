@@ -54,7 +54,15 @@ namespace functionTask1
                         {
                             Console.WriteLine("Введите номер досье, которое вы хотите удалить:\n");
                             int dossierNumber = Convert.ToInt32(Console.ReadLine());
-                            DeleteDossier(ref dossierNumber, ref fullnameList, ref jobTitleList);
+
+                            if (dossierNumber > fullnameList.Length)
+                            {
+                                Console.WriteLine("\nНет досье с таким номером.");
+                            }
+                            else
+                            {
+                                DeleteDossier(ref dossierNumber, ref fullnameList, ref jobTitleList);
+                            }
                         }
                         ReadKeyForContinue();
                         break;

@@ -14,53 +14,136 @@ namespace functionTask1
             const string FirstCommand = "1";
             const string SecondCommand = "2";
             const string ThirdCommand = "3";
-            const string ForthCommand = "4";
+            const string FourthCommand = "4";
             const string FifthCommand = "5";
 
             bool isWorking = true;
             string[] fullnameList = { "Баринов Виктор Петрович", "Лавров Максим Леонидович", "Гончарова Виктория Сергеевна",
                 "Анисимов Константин Тимофеевич", "Анисимова Анастасия Степановна", "Семёнова Екатерина Викторовна" };
             string[] jobTitleList = { "Шеф-повар", "Повар", "Директор ресторана", "Бармен", "Официантка", "Повар" };
-            Console.WriteLine("Приветствуем вас!");
 
             while (isWorking)
             {
+                Console.Clear();
                 Console.WriteLine("Вы можете выполнить следующие команды, введя соответствующее число:" +
                     "\n\n1 - добавить досье\n2 - вывести все досье\n3 - удалить досье\n4 - поиск по фамилии\n5 - выход");
                 string userInput = Console.ReadLine();
+                Console.Clear();
 
                 switch (userInput)
                 {
                     case FirstCommand:
-                        Console.WriteLine("Введите Ф.И.О нового работника:");
+                        Console.WriteLine("Введите Ф.И.О нового работника:\n");
                         string tempFullname = Console.ReadLine();
-                        Console.WriteLine("Введите должность нового работника:");
+                        Console.WriteLine("\nВведите должность нового работника:\n");
                         string tempJobTitle = Console.ReadLine();
                         AddDossier(ref tempFullname, ref tempJobTitle, ref fullnameList, ref jobTitleList);
+                        ReadKeyForContinue();
                         break;
 
                     case SecondCommand:
+                        WriteFullnameAndJobTitle(ref fullnameList, ref jobTitleList);
+                        ReadKeyForContinue();
                         break;
 
                     case ThirdCommand:
+                        Console.WriteLine("Введите номер досье, которое вы хотите удалить:\n");
+                        int dossierNumber = Convert.ToInt32(Console.ReadLine());
+                        DeleteDossier(ref dossierNumber, ref fullnameList, ref jobTitleList);
+                        ReadKeyForContinue();
                         break;
 
-                    case ForthCommand:
+                    case FourthCommand:
+                        Console.WriteLine("Введите фамилию искомого работника:\n");
+                        string searchedSurname = Console.ReadLine();
+                        SearchWithSurname(ref searchedSurname, ref fullnameList, ref jobTitleList);
+                        ReadKeyForContinue();
                         break;
 
                     case FifthCommand:
+                        isWorking = false;
                         break;
 
                     default:
+                        Console.WriteLine("Введена неверная команда...");
+                        ReadKeyForContinue();
                         break;
-
                 }
             }
         }
 
+        static void ReadKeyForContinue()
+        {
+            Console.WriteLine("\nДля продолжения нажмите любую клавишу...\n");
+            Console.ReadKey();
+        }
+
         static void AddDossier(ref string fullname, ref string jobTitle, ref string[] fullnameList, ref string[] jobTitleList)
         {
-            string[] tempFullnameList = new string[fullnameList.Length +1];
+            Console.Clear();
+            int tempDossierLength = fullnameList.Length + 1;
+            string[] tempFullnameList = new string[tempDossierLength];
+            string[] tempJobTitleList = new string[tempDossierLength];
+
+            for (int i = 0; i < fullnameList.Length; i++)
+            {
+                tempFullnameList[i] = fullnameList[i];
+                tempJobTitleList[i] = jobTitleList[i];
+            }
+
+            tempFullnameList[tempDossierLength - 1] = fullname;
+            tempJobTitleList[tempDossierLength - 1] = jobTitle;
+            fullnameList = tempFullnameList;
+            jobTitleList = tempJobTitleList;
+            Console.WriteLine("Досье добавлено!");
+        }
+
+        static void WriteFullnameAndJobTitle(ref string[] fullnameList, ref string[] jobTitleList)
+        {
+            for (int i = 0; i < fullnameList.Length; i++)
+            {
+                int order = i + 1;
+                Console.WriteLine($"{order}-{fullnameList[i]}-{jobTitleList[i]}");
+            }
+        }
+
+        static void DeleteDossier(ref int dossierNumber, ref string[] fullnameList, ref string[] jobTitleList)
+        {
+            Console.Clear();
+            int dossierIndex = dossierNumber - 1;
+            int tempDossierLength = fullnameList.Length - 1;
+            string[] tempFullnameList = new string[tempDossierLength];
+            string[] tempJobTitleList = new string[tempDossierLength];
+
+            for (int i = dossierIndex; i < tempDossierLength; i++)
+            {
+                fullnameList[i] = fullnameList[i + 1];
+                jobTitleList[i] = jobTitleList[i + 1];
+            }
+
+            for (int i = 0; i < tempDossierLength; i++)
+            {
+                tempFullnameList[i] = fullnameList[i];
+                tempJobTitleList[i] = jobTitleList[i];
+            }
+
+            fullnameList = tempFullnameList;
+            jobTitleList = tempJobTitleList;
+            Console.WriteLine("Досье удалено!");
+        }
+
+        static void SearchWithSurname(ref string searchedSurname, ref string[] fullnameList, ref string[] jobTitleList)
+        {
+            Console.WriteLine("\nНайденные совпадения:");
+
+            for (int i = 0; i < fullnameList.Length; i++)
+            {
+                if (fullnameList[i].StartsWith(searchedSurname, StringComparison.OrdinalIgnoreCase))
+                {
+                    int dossierNumber = i + 1;
+                    Console.WriteLine($"\n{dossierNumber}-{fullnameList[i]}-{jobTitleList[i]}");
+                }
+            }
         }
     }
 }

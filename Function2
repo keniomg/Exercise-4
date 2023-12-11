@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace functionTask2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+            int maxHpValue = 100;
+            int minHpValue = 0;
+            int currentHpValue = random.Next(minHpValue, maxHpValue+1);
+            Console.SetCursorPosition(0, 10);
+            Console.WriteLine($"Текущее здоровье - {currentHpValue}");
+            Console.ReadKey();
+            DrawBar(currentHpValue, maxHpValue, ConsoleColor.Green);
+            Console.SetCursorPosition(0, 1);
+            Console.ReadKey();
+        }
+
+        static void DrawBar(int currentHp, int maxHp, ConsoleColor color)
+        {
+            ConsoleColor defaultColor = Console.BackgroundColor;
+            Console.SetCursorPosition(0, 0);
+            string[] hpBar = new string[10];
+            int divisionSize = maxHp / hpBar.Length;
+            int filledDivisionAmount = currentHp / divisionSize;
+            int emptyDivisionAmount = hpBar.Length - filledDivisionAmount;
+            Console.Write("[");
+            Console.BackgroundColor = color;
+
+            for (int i = 0; i < filledDivisionAmount; i++)
+            {
+                hpBar[i] = "|";
+                Console.Write(hpBar[i]);
+            }
+
+            Console.BackgroundColor = defaultColor;
+
+            for (int i = 0; i < emptyDivisionAmount; i++)
+            {
+                hpBar[i] = "|";
+                Console.Write(hpBar[i]);
+            }
+
+            Console.Write("]");
+        }
+    }
+}

@@ -8,7 +8,6 @@ namespace functionTask1
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             const string FirstCommand = "1";
@@ -47,9 +46,16 @@ namespace functionTask1
                         break;
 
                     case ThirdCommand:
-                        Console.WriteLine("Введите номер досье, которое вы хотите удалить:\n");
-                        int dossierNumber = Convert.ToInt32(Console.ReadLine());
-                        DeleteDossier(ref dossierNumber, ref fullnameList, ref jobTitleList);
+                        if (fullnameList.Length == 0)
+                        {
+                            Console.WriteLine("В базе нет ни одного досье.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Введите номер досье, которое вы хотите удалить:\n");
+                            int dossierNumber = Convert.ToInt32(Console.ReadLine());
+                            DeleteDossier(ref dossierNumber, ref fullnameList, ref jobTitleList);
+                        }
                         ReadKeyForContinue();
                         break;
 

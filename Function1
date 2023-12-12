@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace functionTask1
 {
@@ -10,11 +11,11 @@ namespace functionTask1
     {
         static void Main(string[] args)
         {
-            const string FirstCommand = "1";
-            const string SecondCommand = "2";
-            const string ThirdCommand = "3";
-            const string FourthCommand = "4";
-            const string FifthCommand = "5";
+            const string AddDossierCommand = "1";
+            const string WriteDossierCommand = "2";
+            const string DeleteDossierCommand = "3";
+            const string SearchWithSurnameCommand = "4";
+            const string ExitCommand = "5";
 
             bool isWorking = true;
             string[] fullnameList = { "Баринов Виктор Петрович", "Лавров Максим Леонидович", "Гончарова Виктория Сергеевна",
@@ -24,63 +25,35 @@ namespace functionTask1
             while (isWorking)
             {
                 Console.Clear();
-                Console.WriteLine("Вы можете выполнить следующие команды, введя соответствующее число:" +
-                    "\n\n1 - добавить досье\n2 - вывести все досье\n3 - удалить досье\n4 - поиск по фамилии\n5 - выход");
+                Console.WriteLine($"Вы можете выполнить следующие команды, введя соответствующее число:" +
+                    $"\n\n{AddDossierCommand} - добавить досье\n{WriteDossierCommand} - вывести все досье\n{DeleteDossierCommand} - удалить досье\n{SearchWithSurnameCommand} - поиск по фамилии\n{ExitCommand} - выход");
                 string userInput = Console.ReadLine();
                 Console.Clear();
 
                 switch (userInput)
                 {
-                    case FirstCommand:
-                        Console.WriteLine("Введите Ф.И.О нового работника:\n");
-                        string tempFullname = Console.ReadLine();
-                        Console.WriteLine("\nВведите должность нового работника:\n");
-                        string tempJobTitle = Console.ReadLine();
-                        AddDossier(ref tempFullname, ref tempJobTitle, ref fullnameList, ref jobTitleList);
-                        ReadKeyForContinue();
+                    case AddDossierCommand:
+                        AddDossier(ref fullnameList, ref jobTitleList);
                         break;
 
-                    case SecondCommand:
-                        WriteFullnameAndJobTitle(ref fullnameList, ref jobTitleList);
-                        ReadKeyForContinue();
+                    case WriteDossierCommand:
+                        WriteDossier(ref fullnameList, ref jobTitleList);
                         break;
 
-                    case ThirdCommand:
-                        if (fullnameList.Length == 0)
-                        {
-                            Console.WriteLine("В базе нет ни одного досье.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Введите номер досье, которое вы хотите удалить:\n");
-                            int dossierNumber = Convert.ToInt32(Console.ReadLine());
-
-                            if (dossierNumber > fullnameList.Length)
-                            {
-                                Console.WriteLine("\nНет досье с таким номером.");
-                            }
-                            else
-                            {
-                                DeleteDossier(ref dossierNumber, ref fullnameList, ref jobTitleList);
-                            }
-                        }
-                        ReadKeyForContinue();
+                    case DeleteDossierCommand:
+                        DeleteDossier(ref fullnameList, ref jobTitleList);
                         break;
 
-                    case FourthCommand:
-                        Console.WriteLine("Введите фамилию искомого работника:\n");
-                        string searchedSurname = Console.ReadLine();
-                        SearchWithSurname(ref searchedSurname, ref fullnameList, ref jobTitleList);
-                        ReadKeyForContinue();
+                    case SearchWithSurnameCommand:
+                        SearchWithSurname(ref fullnameList, ref jobTitleList);
                         break;
 
-                    case FifthCommand:
+                    case ExitCommand:
                         isWorking = false;
                         break;
 
                     default:
-                        Console.WriteLine("Введена неверная команда...");
-                        ReadKeyForContinue();
+                        WriteError();
                         break;
                 }
             }
@@ -92,62 +65,94 @@ namespace functionTask1
             Console.ReadKey();
         }
 
-        static void AddDossier(ref string fullname, ref string jobTitle, ref string[] fullnameList, ref string[] jobTitleList)
+        static void ExpandArray(ref string[] array, ref string text)
         {
-            Console.Clear();
-            int tempDossierLength = fullnameList.Length + 1;
-            string[] tempFullnameList = new string[tempDossierLength];
-            string[] tempJobTitleList = new string[tempDossierLength];
+            int tempArrayLength = array.Length + 1;
+            string[] tempArray = new string[tempArrayLength];
 
-            for (int i = 0; i < fullnameList.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                tempFullnameList[i] = fullnameList[i];
-                tempJobTitleList[i] = jobTitleList[i];
+                tempArray[i] = array[i];
             }
 
-            tempFullnameList[tempDossierLength - 1] = fullname;
-            tempJobTitleList[tempDossierLength - 1] = jobTitle;
-            fullnameList = tempFullnameList;
-            jobTitleList = tempJobTitleList;
-            Console.WriteLine("Досье добавлено!");
+            tempArray[tempArrayLength - 1] = text;
+            array = tempArray;
         }
 
-        static void WriteFullnameAndJobTitle(ref string[] fullnameList, ref string[] jobTitleList)
+        static void AddDossier(ref string[] fullnameList, ref string[] jobTitleList)
+        {
+            Console.WriteLine("Введите Ф.И.О нового работника:\n");
+            string tempFullname = Console.ReadLine();
+            Console.WriteLine("\nВведите должность нового работника:\n");
+            string tempJobTitle = Console.ReadLine();
+            Console.Clear();
+            ExpandArray(ref fullnameList, ref tempFullname);
+            ExpandArray(ref jobTitleList, ref tempJobTitle);
+            Console.WriteLine("Досье добавлено!");
+            ReadKeyForContinue();
+        }
+
+        static void WriteDossier(ref string[] fullnameList, ref string[] jobTitleList)
         {
             for (int i = 0; i < fullnameList.Length; i++)
             {
                 int order = i + 1;
                 Console.WriteLine($"{order}-{fullnameList[i]}-{jobTitleList[i]}");
             }
+
+            ReadKeyForContinue();
         }
 
-        static void DeleteDossier(ref int dossierNumber, ref string[] fullnameList, ref string[] jobTitleList)
+        static void DecreaseArray(ref string[] array, int number)
         {
-            Console.Clear();
-            int dossierIndex = dossierNumber - 1;
-            int tempDossierLength = fullnameList.Length - 1;
-            string[] tempFullnameList = new string[tempDossierLength];
-            string[] tempJobTitleList = new string[tempDossierLength];
+            int arrayIndex = number - 1;
+            int tempArrayLength = array.Length - 1;
+            string[] tempArray = new string[tempArrayLength];
 
-            for (int i = dossierIndex; i < tempDossierLength; i++)
+            for (int i = arrayIndex; i < tempArrayLength; i++)
             {
-                fullnameList[i] = fullnameList[i + 1];
-                jobTitleList[i] = jobTitleList[i + 1];
+                array[i] = array[i + 1];
             }
 
-            for (int i = 0; i < tempDossierLength; i++)
+            for (int i = 0; i < tempArrayLength; i++)
             {
-                tempFullnameList[i] = fullnameList[i];
-                tempJobTitleList[i] = jobTitleList[i];
+                tempArray[i] = array[i];
             }
 
-            fullnameList = tempFullnameList;
-            jobTitleList = tempJobTitleList;
-            Console.WriteLine("Досье удалено!");
+            array = tempArray;
         }
 
-        static void SearchWithSurname(ref string searchedSurname, ref string[] fullnameList, ref string[] jobTitleList)
+        static void DeleteDossier(ref string[] fullnameList, ref string[] jobTitleList)
         {
+            if (fullnameList.Length == 0)
+            {
+                Console.WriteLine("В базе нет ни одного досье.");
+            }
+            else
+            {
+                Console.WriteLine("Введите номер досье, которое вы хотите удалить:\n");
+                int dossierNumber = Convert.ToInt32(Console.ReadLine());
+
+                if (dossierNumber > fullnameList.Length)
+                {
+                    Console.WriteLine("\nНет досье с таким номером.");
+                }
+                else
+                {
+                    Console.Clear();
+                    DecreaseArray(ref fullnameList, dossierNumber);
+                    DecreaseArray(ref jobTitleList, dossierNumber);
+                    Console.WriteLine("Досье удалено!");
+                }
+            }
+
+            ReadKeyForContinue();
+        }
+
+        static void SearchWithSurname(ref string[] fullnameList, ref string[] jobTitleList)
+        {
+            Console.WriteLine("Введите фамилию искомого работника:\n");
+            string searchedSurname = Console.ReadLine();
             Console.WriteLine("\nНайденные совпадения:");
 
             for (int i = 0; i < fullnameList.Length; i++)
@@ -158,6 +163,14 @@ namespace functionTask1
                     Console.WriteLine($"\n{dossierNumber}-{fullnameList[i]}-{jobTitleList[i]}");
                 }
             }
+
+            ReadKeyForContinue();
+        }
+
+        static void WriteError()
+        {
+            Console.WriteLine("Введена неверная команда...");
+            ReadKeyForContinue();
         }
     }
 }

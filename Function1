@@ -65,7 +65,7 @@ namespace functionTask1
             Console.ReadKey();
         }
 
-        static void ExpandArray(ref string[] array, ref string text)
+        static string[] ExpandArray(string[] array, string text)
         {
             int tempArrayLength = array.Length + 1;
             string[] tempArray = new string[tempArrayLength];
@@ -77,6 +77,7 @@ namespace functionTask1
 
             tempArray[tempArrayLength - 1] = text;
             array = tempArray;
+            return array;
         }
 
         static void AddDossier(ref string[] fullnameList, ref string[] jobTitleList)
@@ -86,8 +87,8 @@ namespace functionTask1
             Console.WriteLine("\nВведите должность нового работника:\n");
             string tempJobTitle = Console.ReadLine();
             Console.Clear();
-            ExpandArray(ref fullnameList, ref tempFullname);
-            ExpandArray(ref jobTitleList, ref tempJobTitle);
+            fullnameList = ExpandArray(fullnameList, tempFullname);
+            jobTitleList = ExpandArray(jobTitleList, tempJobTitle);
             Console.WriteLine("Досье добавлено!");
             ReadKeyForContinue();
         }

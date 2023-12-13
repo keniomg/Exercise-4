@@ -1,0 +1,139 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace functionTask4
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int playerX = 1;
+            int playerY = 1;
+            int score = 0;
+            Console.CursorVisible = false;
+            bool isContinue = true;
+
+            char[,] map =
+            {
+                { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' },
+                { '#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', 'X', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', '#', '#', '#', '#', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', '#', 'X', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', '#', '#', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', '#', 'X', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', ' ', '#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+                { '#', ' ', '#', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+                { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' }
+            };
+
+            while (isContinue)
+            {
+                WriteScore(score);
+                DrawMap(map);
+                DrawPlayer(playerX, playerY);
+                HandleInput(ref playerX, ref playerY, map, ref score);
+                CheckScore(score, ref isContinue);
+            }
+        }
+        
+        static void DrawMap(char[,] map)
+        {
+            Console.SetCursorPosition(0, 0);
+            for (int y = 0; y < map.GetLength(0); y++)
+            {
+                for (int x = 0; x < map.GetLength(1); x++)
+                {
+                    Console.Write(map[y, x]);
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+        static void DrawPlayer(int x, int y)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write('@');
+        }
+
+        static void HandleInput(ref int x, ref int y, char[,] map, ref int score)
+        {
+            ConsoleKeyInfo pressedKey = Console.ReadKey();
+            int[] direction = { 0, 0 };
+
+            switch (pressedKey.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    direction[1] -= 1;
+                    break;
+                case ConsoleKey.DownArrow:
+                    direction[1] += 1;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    direction[0] -= 1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    direction[0] += 1;
+                    break;
+                default:
+                    break;
+            }
+
+            InteractNextPosElement(ref x, ref y, direction, map, ref score);
+
+        }
+
+        static void InteractNextPosElement(ref int x, ref int y, int[] direction, char[,] map, ref int score)
+        {
+            int nextX = x + direction[0];
+            int nextY = y + direction[1];
+
+            switch (map[nextY, nextX])
+            {
+                case '#':
+                    break;
+                
+                case ' ':
+                    x = nextX;
+                    y = nextY;
+                    break;
+
+                case 'X':
+                    score += 5;
+                    x = nextX;
+                    y = nextY;
+                    map[y, x] = 'O';
+                    break;
+            }
+        }
+
+        static void WriteScore(int score)
+        {
+            Console.SetCursorPosition(21, 0);
+            Console.WriteLine("Очки за сокровища: " + score);
+        }
+
+        static void CheckScore(int score, ref bool isContinue)
+        {
+            if (score >= 15)
+            {
+                Console.Clear();
+                Console.SetCursorPosition(4, 7);
+                Console.WriteLine("Вы собрали все сокровища! Игра окончена!");
+                Console.SetCursorPosition(4, 10);
+                Console.CursorVisible = true;
+                isContinue = false;
+            }
+        }
+    }
+}

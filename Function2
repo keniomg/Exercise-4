@@ -14,7 +14,7 @@ namespace functionTask2
             int maxHpValue = 100;
             int minHpValue = 0;
             int currentHpValue = random.Next(minHpValue, maxHpValue+1);
-            Console.SetCursorPosition(0, 10);
+            Console.SetCursorPosition(0, 3);
             Console.WriteLine($"Текущее здоровье - {currentHpValue}");
             Console.ReadKey();
             DrawBar(currentHpValue, maxHpValue, ConsoleColor.Green);

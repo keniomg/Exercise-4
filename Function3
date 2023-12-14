@@ -10,29 +10,28 @@ namespace functionTask3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введенное число после конвертации:\n\n" + ConvertInputToInt() + "\n");
+            Console.WriteLine("Введенное число после конвертации:\n\n" + GetNumber() + "\n");
         }
 
-        static int ConvertInputToInt()
+        static int GetNumber()
         {
-            string userInput = InputString();
+            string userInput = InputNumber();
             int convertedUserInput;
 
             while (int.TryParse(userInput, out convertedUserInput) == false)
             {
-                userInput = InputString();
+                userInput = InputNumber();
             }
 
             Console.Clear();
             return convertedUserInput;
         }
 
-        static string InputString()
+        static string InputNumber()
         {
             Console.Clear();
-            string input;
-            Console.WriteLine("Введите число!");
-            return input = Console.ReadLine();
+            Console.WriteLine("Введите число!\n");
+            return Console.ReadLine();
         }
     }
 }

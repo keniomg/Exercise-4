@@ -11,11 +11,10 @@ namespace functionTask4
     {
         static void Main(string[] args)
         {
-            int playerX = 1;
-            int playerY = 1;
+            int playerPositionX = 1;
+            int playerPositionY = 1;
             int score = 0;
             Console.CursorVisible = false;
-            bool isContinue = true;
 
             char[,] map =
             {
@@ -36,13 +35,13 @@ namespace functionTask4
                 { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' }
             };
 
-            while (isContinue)
+            while (CheckIsContinue(score))
             {
                 WriteScore(score);
                 DrawMap(map);
-                DrawPlayer(playerX, playerY);
-                HandleInput(ref playerX, ref playerY, map, ref score);
-                CheckScore(score, ref isContinue);
+                DrawPlayer(playerPositionX, playerPositionY);
+                int[] direction = GetDirection();
+                InteractNextPosElement(ref playerPositionX, ref playerPositionY, direction, map, ref score);
             }
         }
         
@@ -66,37 +65,39 @@ namespace functionTask4
             Console.Write('@');
         }
 
-        static void HandleInput(ref int x, ref int y, char[,] map, ref int score)
+        static int[] GetDirection()
         {
             ConsoleKeyInfo pressedKey = Console.ReadKey();
             int[] direction = { 0, 0 };
+            const ConsoleKey GoUpCommand = ConsoleKey.UpArrow;
+            const ConsoleKey GoDownCommand = ConsoleKey.DownArrow;
+            const ConsoleKey GoLeftCommand = ConsoleKey.LeftArrow;
+            const ConsoleKey GoRightCommand = ConsoleKey.RightArrow;
 
             switch (pressedKey.Key)
             {
-                case ConsoleKey.UpArrow:
+                case GoUpCommand:
                     direction[1] -= 1;
                     break;
-                case ConsoleKey.DownArrow:
+                case GoDownCommand:
                     direction[1] += 1;
                     break;
-                case ConsoleKey.LeftArrow:
+                case GoLeftCommand:
                     direction[0] -= 1;
                     break;
-                case ConsoleKey.RightArrow:
+                case GoRightCommand:
                     direction[0] += 1;
-                    break;
-                default:
                     break;
             }
 
-            InteractNextPosElement(ref x, ref y, direction, map, ref score);
-
+            return direction;
         }
 
         static void InteractNextPosElement(ref int x, ref int y, int[] direction, char[,] map, ref int score)
         {
             int nextX = x + direction[0];
             int nextY = y + direction[1];
+            int treasureScoreReward = 5;
 
             switch (map[nextY, nextX])
             {
@@ -109,7 +110,7 @@ namespace functionTask4
                     break;
 
                 case 'X':
-                    score += 5;
+                    score += treasureScoreReward;
                     x = nextX;
                     y = nextY;
                     map[y, x] = 'O';
@@ -123,7 +124,7 @@ namespace functionTask4
             Console.WriteLine("Очки за сокровища: " + score);
         }
 
-        static void CheckScore(int score, ref bool isContinue)
+        static bool CheckIsContinue(int score)
         {
             if (score >= 15)
             {
@@ -132,7 +133,11 @@ namespace functionTask4
                 Console.WriteLine("Вы собрали все сокровища! Игра окончена!");
                 Console.SetCursorPosition(4, 10);
                 Console.CursorVisible = true;
-                isContinue = false;
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }

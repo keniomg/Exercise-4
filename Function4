@@ -42,7 +42,7 @@ namespace functionTask4
                 DrawMap(map);
                 DrawPlayer(playerPositionX, playerPositionY);
                 int[] direction = GetDirection();
-                InteractNextPositionElement(ref playerPositionX, ref playerPositionY, direction, map, ref score);
+                MovePlayer(ref playerPositionX, ref playerPositionY, direction, map, ref score);
             }
         }
         
@@ -69,12 +69,13 @@ namespace functionTask4
 
         static int[] GetDirection()
         {
-            ConsoleKeyInfo pressedKey = Console.ReadKey();
-            int[] direction = { 0, 0 };
             const ConsoleKey GoUpCommand = ConsoleKey.UpArrow;
             const ConsoleKey GoDownCommand = ConsoleKey.DownArrow;
             const ConsoleKey GoLeftCommand = ConsoleKey.LeftArrow;
             const ConsoleKey GoRightCommand = ConsoleKey.RightArrow;
+
+            ConsoleKeyInfo pressedKey = Console.ReadKey();
+            int[] direction = { 0, 0 };
 
             switch (pressedKey.Key)
             {
@@ -98,7 +99,7 @@ namespace functionTask4
             return direction;
         }
 
-        static void InteractNextPositionElement(ref int positionX, ref int positionY, int[] direction, char[,] map, ref int score)
+        static void MovePlayer(ref int positionX, ref int positionY, int[] direction, char[,] map, ref int score)
         {
             const char EmptyCell = ' ';
             const char UnknownTreasureCell = 'X';
@@ -116,12 +117,12 @@ namespace functionTask4
                     break;
 
                 case UnknownTreasureCell:
-                    UnknownTreasureInteract(ref positionX, ref positionY, nextPositionX, nextPositionY, ref score, ref treasureScoreReward, ref map, KnownTreasureCell);
+                    InteractUnknownTreasure(ref positionX, ref positionY, nextPositionX, nextPositionY, ref score, ref treasureScoreReward, ref map, KnownTreasureCell);
                     break;
             }
         }
 
-        static void UnknownTreasureInteract(ref int positionX, ref int positionY, int nextPositionX, int nextPositionY, ref int score, ref int treasureScoreReward, ref char[,] map, char knownTreasureCell)
+        static void InteractUnknownTreasure(ref int positionX, ref int positionY, int nextPositionX, int nextPositionY, ref int score, ref int treasureScoreReward, ref char[,] map, char knownTreasureCell)
         {
             MoveNextCell(ref positionX, ref positionY, nextPositionX, nextPositionY);
             score += treasureScoreReward;

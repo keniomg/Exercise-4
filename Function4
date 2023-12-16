@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace functionTask4
 {
@@ -35,7 +36,7 @@ namespace functionTask4
                 { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' }
             };
 
-            while (CheckIsContinue(score))
+            while (IsContinue(score))
             {
                 WriteScore(score);
                 DrawMap(map);
@@ -48,6 +49,7 @@ namespace functionTask4
         static void DrawMap(char[,] map)
         {
             Console.SetCursorPosition(0, 0);
+
             for (int y = 0; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
@@ -79,12 +81,15 @@ namespace functionTask4
                 case GoUpCommand:
                     direction[1] -= 1;
                     break;
+
                 case GoDownCommand:
                     direction[1] += 1;
                     break;
+
                 case GoLeftCommand:
                     direction[0] -= 1;
                     break;
+
                 case GoRightCommand:
                     direction[0] += 1;
                     break;
@@ -95,27 +100,38 @@ namespace functionTask4
 
         static void InteractNextPosElement(ref int x, ref int y, int[] direction, char[,] map, ref int score)
         {
+            const char EmptyCell = ' ';
+            const char UnknownTreasureCell = 'X';
+            const char KnownTreasureCell = 'O';
+
             int nextX = x + direction[0];
             int nextY = y + direction[1];
             int treasureScoreReward = 5;
 
             switch (map[nextY, nextX])
             {
-                case '#':
-                    break;
-                
-                case ' ':
-                    x = nextX;
-                    y = nextY;
+                case KnownTreasureCell:
+                case EmptyCell:
+                    MoveNextCell(ref x, ref y, nextX, nextY);
                     break;
 
-                case 'X':
-                    score += treasureScoreReward;
-                    x = nextX;
-                    y = nextY;
-                    map[y, x] = 'O';
+                case UnknownTreasureCell:
+                    UnknownTreasureInteract(ref x, ref y, nextX, nextY, ref score, ref treasureScoreReward, ref map, KnownTreasureCell);
                     break;
             }
+        }
+
+        static void UnknownTreasureInteract(ref int x, ref int y, int nextX, int nextY, ref int score, ref int treasureScoreReward, ref char[,] map, char knownTreasureCell)
+        {
+            MoveNextCell(ref x, ref y, nextX, nextY);
+            score += treasureScoreReward;
+            map[y, x] = knownTreasureCell;
+        }
+
+        static void MoveNextCell(ref int x, ref int y, int nextX, int nextY)
+        {
+            x = nextX;
+            y = nextY;
         }
 
         static void WriteScore(int score)
@@ -124,9 +140,11 @@ namespace functionTask4
             Console.WriteLine("Очки за сокровища: " + score);
         }
 
-        static bool CheckIsContinue(int score)
+        static bool IsContinue(int score)
         {
-            if (score >= 15)
+            int scoreToWin = 15;
+
+            if (score >= scoreToWin)
             {
                 Console.Clear();
                 Console.SetCursorPosition(4, 7);

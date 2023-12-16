@@ -13,16 +13,13 @@ namespace functionTask5
             int[] numbers = new int[15];
             SetRandomArrayElements(0, 10, numbers);
             WriteArray(numbers, "Изначальный массив:");
-            int[] tempNumbers = CopyArray(numbers);
-            int[] skipIndexes = AddSkipIndexes(numbers);
-            Shuffle(numbers, tempNumbers, skipIndexes, 0, numbers.Length);
+            Shuffle(ref numbers, 0, numbers.Length);
+            WriteArray(numbers, "Смешанный массив:");
         }
 
         static void SetRandomArrayElements(int minValue, int maxValue, int[] array)
         {
             Random random = new Random();
-            int minRandomElementValue = minValue;
-            int maxRandomElementValue = maxValue;
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -42,37 +39,20 @@ namespace functionTask5
             Console.WriteLine("\n");
         }
 
-        static int[] CopyArray(int[] array)
-        {
-            int[] tempArray = new int[array.Length];
-
-            for (int i = 0; i < tempArray.Length; i++)
-            {
-                tempArray[i] = array[i];
-            }
-
-            return tempArray;
-        }
-
-        static int[] AddSkipIndexes(int[] array)
-        {
-            int[] indexesArray = new int[array.Length];
-
-            for (int i = 0; i < indexesArray.Length; i++)
-            {
-                indexesArray[i] = -1;
-            }
-
-            return indexesArray;
-        }
-
-        static void Shuffle(int[] array, int[] tempArray, int[] skipIndexes, int minIndexValue, int maxIndexValue)
+        static void Shuffle(ref int[] array, int minIndexValue, int maxIndexValue)
         {
             Random random = new Random();
             int minRandomIndexValue = minIndexValue;
             int maxRandomIndexValue = maxIndexValue;
+            int[] skipIndexes = new int[array.Length];
+            int[] tempArray = new int[array.Length];
 
-            for (int i = 0; i < tempArray.Length;)
+            for (int i = 0; i < skipIndexes.Length; i++)
+            {
+                skipIndexes[i] = -1;
+            }
+
+            for (int i = 0; i < array.Length;)
             {
                 int mixedIndex = random.Next(minRandomIndexValue, maxRandomIndexValue);
 
@@ -85,7 +65,6 @@ namespace functionTask5
             }
 
             array = tempArray;
-            WriteArray(array, "Смешанный массив:");
         }
     }
 }

@@ -42,7 +42,7 @@ namespace functionTask4
                 DrawMap(map);
                 DrawPlayer(playerPositionX, playerPositionY);
                 int[] direction = GetDirection();
-                InteractNextPosElement(ref playerPositionX, ref playerPositionY, direction, map, ref score);
+                InteractNextPositionElement(ref playerPositionX, ref playerPositionY, direction, map, ref score);
             }
         }
         
@@ -50,20 +50,20 @@ namespace functionTask4
         {
             Console.SetCursorPosition(0, 0);
 
-            for (int y = 0; y < map.GetLength(0); y++)
+            for (int positionY = 0; positionY < map.GetLength(0); positionY++)
             {
-                for (int x = 0; x < map.GetLength(1); x++)
+                for (int positionX = 0; positionX < map.GetLength(1); positionX++)
                 {
-                    Console.Write(map[y, x]);
+                    Console.Write(map[positionY, positionX]);
                 }
 
                 Console.WriteLine();
             }
         }
 
-        static void DrawPlayer(int x, int y)
+        static void DrawPlayer(int positionX, int positionY)
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(positionX, positionY);
             Console.Write('@');
         }
 
@@ -79,59 +79,59 @@ namespace functionTask4
             switch (pressedKey.Key)
             {
                 case GoUpCommand:
-                    direction[1] -= 1;
+                    direction[1]--;
                     break;
 
                 case GoDownCommand:
-                    direction[1] += 1;
+                    direction[1]++;
                     break;
 
                 case GoLeftCommand:
-                    direction[0] -= 1;
+                    direction[0]--;
                     break;
 
                 case GoRightCommand:
-                    direction[0] += 1;
+                    direction[0]++;
                     break;
             }
 
             return direction;
         }
 
-        static void InteractNextPosElement(ref int x, ref int y, int[] direction, char[,] map, ref int score)
+        static void InteractNextPositionElement(ref int positionX, ref int positionY, int[] direction, char[,] map, ref int score)
         {
             const char EmptyCell = ' ';
             const char UnknownTreasureCell = 'X';
             const char KnownTreasureCell = 'O';
 
-            int nextX = x + direction[0];
-            int nextY = y + direction[1];
+            int nextPositionX = positionX + direction[0];
+            int nextPositionY = positionY + direction[1];
             int treasureScoreReward = 5;
 
-            switch (map[nextY, nextX])
+            switch (map[nextPositionY, nextPositionX])
             {
                 case KnownTreasureCell:
                 case EmptyCell:
-                    MoveNextCell(ref x, ref y, nextX, nextY);
+                    MoveNextCell(ref positionX, ref positionY, nextPositionX, nextPositionY);
                     break;
 
                 case UnknownTreasureCell:
-                    UnknownTreasureInteract(ref x, ref y, nextX, nextY, ref score, ref treasureScoreReward, ref map, KnownTreasureCell);
+                    UnknownTreasureInteract(ref positionX, ref positionY, nextPositionX, nextPositionY, ref score, ref treasureScoreReward, ref map, KnownTreasureCell);
                     break;
             }
         }
 
-        static void UnknownTreasureInteract(ref int x, ref int y, int nextX, int nextY, ref int score, ref int treasureScoreReward, ref char[,] map, char knownTreasureCell)
+        static void UnknownTreasureInteract(ref int positionX, ref int positionY, int nextPositionX, int nextPositionY, ref int score, ref int treasureScoreReward, ref char[,] map, char knownTreasureCell)
         {
-            MoveNextCell(ref x, ref y, nextX, nextY);
+            MoveNextCell(ref positionX, ref positionY, nextPositionX, nextPositionY);
             score += treasureScoreReward;
-            map[y, x] = knownTreasureCell;
+            map[positionY, positionX] = knownTreasureCell;
         }
 
-        static void MoveNextCell(ref int x, ref int y, int nextX, int nextY)
+        static void MoveNextCell(ref int positionX, ref int positionY, int nextPositionX, int nextPositionY)
         {
-            x = nextX;
-            y = nextY;
+            positionX = nextPositionX;
+            positionY = nextPositionY;
         }
 
         static void WriteScore(int score)

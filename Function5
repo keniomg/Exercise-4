@@ -42,29 +42,14 @@ namespace functionTask5
         static void Shuffle(ref int[] array, int minIndexValue, int maxIndexValue)
         {
             Random random = new Random();
-            int minRandomIndexValue = minIndexValue;
-            int maxRandomIndexValue = maxIndexValue;
-            int[] skipIndexes = new int[array.Length];
-            int[] tempArray = new int[array.Length];
 
-            for (int i = 0; i < skipIndexes.Length; i++)
+            for (int i = array.Length - 1; i >= 1; i--)
             {
-                skipIndexes[i] = -1;
+                int mixedIndex = random.Next(i + 1);
+                int tempNumber = array[mixedIndex];
+                array[mixedIndex] = array[i];
+                array[i] = tempNumber;
             }
-
-            for (int i = 0; i < array.Length;)
-            {
-                int mixedIndex = random.Next(minRandomIndexValue, maxRandomIndexValue);
-
-                if (skipIndexes.Contains<int>(mixedIndex) == false)
-                {
-                    skipIndexes[i] = mixedIndex;
-                    tempArray[i] = array[mixedIndex];
-                    i++;
-                }
-            }
-
-            array = tempArray;
         }
     }
 }
